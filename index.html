@@ -256,4 +256,48 @@ function saveNotes(){
 }
 function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
 
+document.getElementById('notes').value=localStorage.getItem('placementPlannerNotes')||'';
+renderToday();
+renderWeek();
+</script>
+
+<script type="module">
+  import { initializeApp }
+    from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+
+  import {
+    getAuth,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+  import {
+    getFirestore
+  } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBJoPaDm1Xk4SGJa4AKwxb1AJADjl-1qjU",
+  authDomain: "kavin-placement.firebaseapp.com",
+  projectId: "kavin-placement",
+  storageBucket: "kavin-placement.firebasestorage.app",
+  messagingSenderId: "210089235152",
+  appId: "1:210089235152:web:4b6bbcbc7032fd5e5ac4d5"
+};
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  console.log("Firebase connected!");
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("Logged in:", user.email);
+    } else {
+      console.log("Not logged in");
+    }
+  });
+</script>
+
+</body>
+</html>
 
