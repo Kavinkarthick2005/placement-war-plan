@@ -3,21 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Kavin — Placement & Semester Planner</title>
+<title>Kavin — Placement + Semester Planner</title>
 
 <style>
   :root {
-    --bg: #f5f7fb;
+    --bg: #eef4ff;
     --card: #ffffff;
     --text: #172033;
-    --muted: #687386;
+    --muted: #64748b;
     --blue: #2563eb;
-    --blue2: #dbeafe;
+    --blue-dark: #174ea6;
+    --blue-soft: #dbeafe;
     --green: #16a34a;
+    --green-soft: #dcfce7;
     --red: #dc2626;
-    --border: #e5e7eb;
+    --red-soft: #fee2e2;
     --yellow: #f59e0b;
+    --border: #dbe3ef;
+    --shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
   }
 
   * {
@@ -28,27 +31,107 @@
     margin: 0;
     font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
       "Segoe UI", Roboto, sans-serif;
-    background: var(--bg);
+    background: linear-gradient(135deg, #eef4ff, #f8fbff);
     color: var(--text);
   }
 
-  /* =========================
-     HEADER
-  ========================= */
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  /* LOGIN */
+
+  #loginScreen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #123f78, #2563eb);
+  }
+
+  .login-card {
+    width: 100%;
+    max-width: 420px;
+    background: white;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  }
+
+  .login-card h1 {
+    margin: 0 0 8px;
+    font-size: 26px;
+  }
+
+  .login-card p {
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  .login-card label {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin: 14px 0 6px;
+  }
+
+  .login-card input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    outline: none;
+  }
+
+  .login-card input:focus {
+    border-color: var(--blue);
+  }
+
+  .login-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    border: 0;
+    border-radius: 10px;
+    background: var(--blue);
+    color: white;
+    font-weight: 800;
+  }
+
+  .login-btn:hover {
+    background: var(--blue-dark);
+  }
+
+  #loginError {
+    display: none;
+    margin-top: 14px;
+    padding: 10px;
+    border-radius: 8px;
+    background: var(--red-soft);
+    color: #991b1b;
+    font-size: 13px;
+  }
+
+  /* HEADER */
 
   header {
-    background: #123f78;
-    color: #ffffff;
-    padding: 24px 5%;
-    position: sticky;
-    top: 0;
-    z-index: 5;
+    background: linear-gradient(135deg, #123f78, #1d4ed8);
+    color: white;
+    padding: 22px 5%;
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.15);
   }
 
   header h1 {
-    margin: 0 0 6px;
-    font-size: 24px;
-    color: #ffffff;
+    margin: 0 0 5px;
+    font-size: 25px;
   }
 
   header p {
@@ -56,77 +139,56 @@
     color: #dbeafe;
   }
 
-  #authBox {
-    margin-top: 15px;
-    max-width: 650px;
-  }
-
-  #loginForm > div {
+  .userbar {
+    margin-top: 14px;
     display: flex;
-    gap: 8px;
+    align-items: center;
+    gap: 10px;
     flex-wrap: wrap;
   }
 
-  #loginForm input {
-    flex: 1;
-    min-width: 200px;
+  .user-email {
+    font-size: 14px;
+    color: #eff6ff;
   }
 
-  #authMessage {
-    margin-top: 8px;
-    font-size: 13px;
-    color: #ffffff;
+  .logout-btn {
+    border: 0;
+    border-radius: 8px;
+    padding: 8px 13px;
+    font-weight: 700;
+    background: white;
+    color: #17345f;
   }
 
-  #loggedIn {
-    display: none;
-    align-items: center;
-    gap: 8px;
+  .sync-status {
+    margin-left: auto;
+    font-size: 12px;
+    background: rgba(255,255,255,0.15);
+    padding: 6px 10px;
+    border-radius: 999px;
   }
 
-  #userEmail {
-    color: #ffffff;
-    font-weight: 600;
-  }
-
-  /* =========================
-     MAIN
-  ========================= */
+  /* MAIN */
 
   main {
     max-width: 1200px;
     margin: 24px auto;
     padding: 0 18px;
-    color: var(--text);
   }
 
   .grid {
     display: grid;
-    grid-template-columns: repeat(
-      auto-fit,
-      minmax(280px, 1fr)
-    );
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 16px;
   }
 
-  /* =========================
-     CARDS
-  ========================= */
-
   .card {
-    background: #ffffff;
+    background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 14px;
+    border-radius: 16px;
     padding: 18px;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.03);
-    color: var(--text);
-  }
-
-  .card h2,
-  .card h3,
-  .card h4,
-  .card strong {
-    color: var(--text);
+    box-shadow: var(--shadow);
   }
 
   h2 {
@@ -144,173 +206,48 @@
     font-size: 13px;
   }
 
-  /* =========================
-     PILLS
-  ========================= */
+  .stat {
+    font-size: 26px;
+    font-weight: 800;
+    margin-top: 5px;
+  }
 
   .pill {
     display: inline-block;
     border-radius: 999px;
-    padding: 5px 9px;
+    padding: 6px 10px;
     font-size: 12px;
     font-weight: 700;
-    background: var(--blue2);
+    background: var(--blue-soft);
     color: #1d4ed8;
-    margin: 2px;
   }
 
   .holiday {
-    background: #fee2e2;
+    background: var(--red-soft);
     color: #b91c1c;
   }
 
-  .today {
-    background: #dcfce7;
+  .today-pill {
+    background: var(--green-soft);
     color: #166534;
   }
 
-  .danger {
-    color: var(--red);
-  }
-
-  .success {
-    color: var(--green);
-  }
-
-  /* =========================
-     TIMELINE
-  ========================= */
-
   .timeline {
     display: grid;
-    gap: 8px;
+    gap: 9px;
   }
 
   .slot {
-    padding: 10px 12px;
+    padding: 11px 13px;
     border-left: 4px solid var(--blue);
     background: #f8fafc;
     border-radius: 8px;
-    color: var(--text);
   }
 
   .slot strong {
     display: block;
-    color: var(--text);
+    margin-bottom: 2px;
   }
-
-  /* =========================
-     INPUTS
-  ========================= */
-
-  input,
-  select,
-  textarea,
-  button {
-    font: inherit;
-  }
-
-  input,
-  select,
-  textarea {
-    width: 100%;
-    padding: 9px 10px;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    background: #ffffff;
-    color: #172033;
-  }
-
-  input::placeholder,
-  textarea::placeholder {
-    color: #687386;
-  }
-
-  textarea {
-    min-height: 90px;
-    resize: vertical;
-  }
-
-  /* =========================
-     BUTTONS
-  ========================= */
-
-  button {
-    border: 0;
-    border-radius: 8px;
-    padding: 9px 13px;
-    cursor: pointer;
-    font-weight: 700;
-  }
-
-  button:hover {
-    opacity: 0.92;
-  }
-
-  .primary {
-    background: var(--blue);
-    color: #ffffff;
-  }
-
-  .secondary {
-    background: #eef2f7;
-    color: #273449;
-  }
-
-  .dangerbtn {
-    background: #fee2e2;
-    color: #991b1b;
-  }
-
-  /* =========================
-     ROW
-  ========================= */
-
-  .row {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  .row > * {
-    flex: 1;
-  }
-
-  /* =========================
-     TASKS
-  ========================= */
-
-  .task {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    padding: 9px 0;
-    border-bottom: 1px solid var(--border);
-    color: var(--text);
-  }
-
-  .task:last-child {
-    border-bottom: 0;
-  }
-
-  .task input[type="checkbox"] {
-    width: auto;
-    flex: 0 0 auto;
-  }
-
-  .task span {
-    color: var(--text);
-  }
-
-  .task.done span {
-    text-decoration: line-through;
-    color: var(--muted);
-  }
-
-  /* =========================
-     WEEK
-  ========================= */
 
   .week {
     margin-top: 18px;
@@ -326,79 +263,178 @@
 
   .dategrid {
     display: grid;
-    grid-template-columns: repeat(
-      auto-fit,
-      minmax(180px, 1fr)
-    );
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 10px;
   }
 
   .day {
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: 11px;
     padding: 12px;
-    background: #ffffff;
-    color: var(--text);
+    background: white;
   }
 
   .day.today {
     border: 2px solid #86efac;
+    box-shadow: 0 0 0 3px #dcfce7;
   }
 
   .day h4 {
-    margin: 0 0 6px;
-    color: var(--text);
+    margin: 0 0 5px;
+    font-size: 15px;
   }
 
   .day small {
     color: var(--muted);
+    display: block;
+    margin-bottom: 8px;
   }
 
-  /* =========================
-     STATS
-  ========================= */
+  .task {
+    display: flex;
+    gap: 9px;
+    align-items: center;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+  }
 
-  .stat {
-    font-size: 26px;
-    font-weight: 800;
+  .task:last-child {
+    border-bottom: 0;
+  }
+
+  .task input[type="checkbox"] {
+    width: auto;
+    accent-color: var(--blue);
+  }
+
+  .task span {
     color: var(--text);
+    font-size: 13px;
   }
 
-  .small {
+  .task.done span {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+
+  .empty {
+    color: var(--muted);
     font-size: 12px;
+    padding: 8px 0;
   }
 
-  /* =========================
-     FOOTER
-  ========================= */
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: 10px 11px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    background: white;
+    color: var(--text);
+    outline: none;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px #dbeafe;
+  }
+
+  textarea {
+    min-height: 110px;
+    resize: vertical;
+  }
+
+  .row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .row > * {
+    flex: 1;
+  }
+
+  button {
+    border: 0;
+    border-radius: 9px;
+    padding: 10px 14px;
+    font-weight: 700;
+  }
+
+  .primary {
+    background: var(--blue);
+    color: white;
+  }
+
+  .primary:hover {
+    background: var(--blue-dark);
+  }
+
+  .secondary {
+    background: #e8eef7;
+    color: #273449;
+  }
+
+  .secondary:hover {
+    background: #dce5f1;
+  }
+
+  .dangerbtn {
+    background: var(--red-soft);
+    color: #991b1b;
+  }
+
+  .roadmap-item {
+    padding: 13px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: #f8fafc;
+  }
+
+  .deadline {
+    padding: 12px 14px;
+    border-left: 4px solid var(--blue);
+    background: #f8fafc;
+    border-radius: 8px;
+  }
+
+  .deadline strong {
+    display: block;
+    margin-bottom: 3px;
+  }
 
   .footer {
     text-align: center;
     color: var(--muted);
-    padding: 25px;
+    padding: 28px 10px;
+    font-size: 13px;
   }
 
-  /* =========================
-     MOBILE
-  ========================= */
+  .loading {
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--muted);
+  }
 
   @media (max-width: 600px) {
-
     header {
       padding: 18px;
     }
 
-    header h1 {
-      font-size: 21px;
+    main {
+      padding: 0 12px;
     }
 
     .card {
       padding: 14px;
     }
 
-    .weekhead {
-      align-items: flex-start;
-      flex-direction: column;
+    .sync-status {
+      margin-left: 0;
     }
 
     .row {
@@ -413,96 +449,76 @@
 </style>
 </head>
 
-
 <body>
 
-<!-- =========================================================
-     HEADER
-========================================================= -->
+<!-- LOGIN SCREEN -->
+
+<div id="loginScreen">
+  <div class="login-card">
+    <h1>🎯 Placement Planner</h1>
+    <p>Login to access the shared planner.</p>
+
+    <label>Email</label>
+    <input
+      id="email"
+      type="email"
+      placeholder="Enter your email"
+      autocomplete="email"
+    >
+
+    <label>Password</label>
+    <input
+      id="password"
+      type="password"
+      placeholder="Enter your password"
+      autocomplete="current-password"
+    >
+
+    <button class="login-btn" onclick="login()">
+      Login
+    </button>
+
+    <div id="loginError"></div>
+  </div>
+</div>
+
+
+<!-- MAIN APP -->
+
+<div id="app" style="display:none;">
 
 <header>
 
   <h1>🎯 Placement + Semester Planner</h1>
 
   <p>
-    Simple weekly control panel — update it every day.
-    Goal: stay consistent through 20 Nov 2026.
+    Shared control panel — stay consistent through 20 Nov 2026.
   </p>
 
+  <div class="userbar">
 
-  <!-- =========================
-       AUTHENTICATION
-  ========================== -->
+    <span class="user-email">
+      👋 <span id="userEmail"></span>
+    </span>
 
-  <div id="authBox">
+    <button class="logout-btn" onclick="logout()">
+      Logout
+    </button>
 
-    <!-- LOGIN FORM -->
-
-    <div id="loginForm">
-
-      <div>
-
-        <input
-          id="email"
-          type="email"
-          placeholder="Email"
-        >
-
-        <input
-          id="password"
-          type="password"
-          placeholder="Password"
-        >
-
-        <button
-          class="primary"
-          onclick="login()"
-        >
-          Login
-        </button>
-
-      </div>
-
-      <div id="authMessage"></div>
-
-    </div>
-
-
-    <!-- LOGGED IN -->
-
-    <div id="loggedIn">
-
-      <span id="userEmail"></span>
-
-      <button
-        class="secondary"
-        onclick="logout()"
-      >
-        Logout
-      </button>
-
-    </div>
+    <span class="sync-status" id="syncStatus">
+      ☁️ Connecting...
+    </span>
 
   </div>
 
 </header>
 
 
-<!-- =========================================================
-     MAIN
-========================================================= -->
-
 <main>
 
-
-  <!-- =========================
-       TOP THREE CARDS
-  ========================== -->
+  <!-- TOP CARDS -->
 
   <div class="grid">
-
-
-    <!-- TODAY -->
 
     <section class="card">
 
@@ -510,16 +526,13 @@
 
       <div id="todayInfo"></div>
 
-      <div style="margin-top:12px">
+      <div style="margin-top:14px;">
 
         <div class="muted">
           Current focus
         </div>
 
-        <div
-          id="focus"
-          class="stat"
-        >
+        <div id="focus" class="stat">
           Placement
         </div>
 
@@ -527,8 +540,6 @@
 
     </section>
 
-
-    <!-- DAILY BASICS -->
 
     <section class="card">
 
@@ -548,7 +559,7 @@
 
         <div class="slot">
           <strong>Target — 12:00 AM</strong>
-          Sleep (fix from 1:00 AM)
+          Sleep
         </div>
 
         <div class="slot">
@@ -570,8 +581,6 @@
 
     </section>
 
-
-    <!-- DAY ORDER -->
 
     <section class="card">
 
@@ -601,7 +610,7 @@
 
         <div class="slot">
           <strong>Day 5 — 9:45–11:30 AM</strong>
-          Placement Training (tentative)
+          Placement Training
         </div>
 
       </div>
@@ -611,23 +620,18 @@
   </div>
 
 
-  <!-- =====================================================
-       WEEK PLAN
-  ====================================================== -->
+  <!-- WEEK -->
 
   <section class="card week">
 
     <div class="weekhead">
 
       <div>
-
         <h2>🗓️ This week's plan</h2>
 
         <div class="muted">
-          Edit the tasks below.
-          Changes are saved in this browser.
+          Changes are saved to Firebase and synced between both accounts.
         </div>
-
       </div>
 
       <button
@@ -639,14 +643,16 @@
 
     </div>
 
-    <div id="weekTasks"></div>
+    <div id="weekTasks">
+      <div class="loading">
+        ☁️ Loading shared tasks...
+      </div>
+    </div>
 
   </section>
 
 
-  <!-- =====================================================
-       PLACEMENT ROADMAP
-  ====================================================== -->
+  <!-- ROADMAP -->
 
   <section class="card week">
 
@@ -654,8 +660,7 @@
 
     <div class="grid">
 
-
-      <div>
+      <div class="roadmap-item">
 
         <h3>DSA</h3>
 
@@ -667,7 +672,7 @@
       </div>
 
 
-      <div>
+      <div class="roadmap-item">
 
         <h3>CSE / AI core</h3>
 
@@ -679,9 +684,9 @@
       </div>
 
 
-      <div>
+      <div class="roadmap-item">
 
-        <h3>Resume / profile</h3>
+        <h3>Resume / Profile</h3>
 
         <div class="muted">
           Projects · Skills · Internships · Achievements ·
@@ -691,7 +696,7 @@
       </div>
 
 
-      <div>
+      <div class="roadmap-item">
 
         <h3>Miscellaneous</h3>
 
@@ -707,9 +712,7 @@
   </section>
 
 
-  <!-- =====================================================
-       ADD TASK
-  ====================================================== -->
+  <!-- ADD TASK -->
 
   <section class="card week">
 
@@ -724,16 +727,41 @@
 
       <select id="taskDay">
 
-        <option>Today</option>
-        <option>Tomorrow</option>
+        <option value="Today">
+          Today
+        </option>
 
-        <option>Monday</option>
-        <option>Tuesday</option>
-        <option>Wednesday</option>
-        <option>Thursday</option>
-        <option>Friday</option>
-        <option>Saturday</option>
-        <option>Sunday</option>
+        <option value="Tomorrow">
+          Tomorrow
+        </option>
+
+        <option value="Monday">
+          Monday
+        </option>
+
+        <option value="Tuesday">
+          Tuesday
+        </option>
+
+        <option value="Wednesday">
+          Wednesday
+        </option>
+
+        <option value="Thursday">
+          Thursday
+        </option>
+
+        <option value="Friday">
+          Friday
+        </option>
+
+        <option value="Saturday">
+          Saturday
+        </option>
+
+        <option value="Sunday">
+          Sunday
+        </option>
 
       </select>
 
@@ -754,9 +782,7 @@
   </section>
 
 
-  <!-- =====================================================
-       DEADLINES
-  ====================================================== -->
+  <!-- DEADLINES -->
 
   <section class="card week">
 
@@ -764,24 +790,22 @@
 
     <div class="timeline">
 
-      <div class="slot">
+      <div class="deadline">
         <strong>9 Oct 2026</strong>
-        Project presentation — stated as the last date
-        for remaining teams.
+        Project presentation — last date for remaining teams.
       </div>
 
-      <div class="slot">
+      <div class="deadline">
         <strong>14 Oct 2026</strong>
         FT3 test — Unit 4 + Unit 5.
       </div>
 
-      <div class="slot">
+      <div class="deadline">
         <strong>October 2026</strong>
-        Disaster FT3 exam after the 30th +
-        presentation/case study work.
+        Disaster FT3 exam after the 30th + presentation/case study.
       </div>
 
-      <div class="slot">
+      <div class="deadline">
         <strong>20 Nov 2026</strong>
         🔥 Last working day for this semester.
       </div>
@@ -791,9 +815,7 @@
   </section>
 
 
-  <!-- =====================================================
-       NOTES
-  ====================================================== -->
+  <!-- NOTES -->
 
   <section class="card week">
 
@@ -804,10 +826,7 @@
       placeholder="What happened today? What needs to move to tomorrow?"
     ></textarea>
 
-    <div
-      class="row"
-      style="margin-top:8px"
-    >
+    <div class="row" style="margin-top:8px;">
 
       <button
         class="primary"
@@ -818,7 +837,7 @@
 
       <button
         class="secondary"
-        onclick="clearNotes()"
+        onclick="clearNotesBox()"
       >
         Clear box
       </button>
@@ -828,62 +847,111 @@
   </section>
 
 
-  <!-- =====================================================
-       FOOTER
-  ====================================================== -->
-
   <div class="footer">
 
     Keep it simple:
     <b>DSA + aptitude + college + health + sleep.</b>
 
-    Consistency beats a 12-hour timetable
-    you can't repeat.
+    <br>
+
+    Consistency beats a 12-hour timetable you can't repeat.
 
   </div>
 
 </main>
 
+</div>
 
-<!-- =========================================================
-     NORMAL JAVASCRIPT
-========================================================= -->
 
-<script>
+<!-- FIREBASE -->
 
-  /* =========================
-     DAY ORDERS
-  ========================== */
+<script type="module">
+
+  import { initializeApp }
+    from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+
+  import {
+    getAuth,
+    signInWithEmailAndPassword,
+    onAuthStateChanged,
+    signOut
+  }
+    from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
+  import {
+    getFirestore,
+    doc,
+    getDoc,
+    setDoc,
+    onSnapshot,
+    serverTimestamp
+  }
+    from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+
+
+  /*
+  ==========================================================
+  IMPORTANT
+  ==========================================================
+
+  KEEP THE REAL firebaseConfig FROM YOUR CURRENT WORKING FILE.
+
+  The values shown in the chat earlier were fake.
+  Replace this object with your REAL Firebase web config.
+  ==========================================================
+  */
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBJoPaDm1Xk4SGJa4AKwxb1AJADjl-1qjU",
+  authDomain: "kavin-placement.firebaseapp.com",
+  projectId: "kavin-placement",
+  storageBucket: "kavin-placement.firebasestorage.app",
+  messagingSenderId: "210089235152",
+  appId: "1:210089235152:web:4b6bbcbc7032fd5e5ac4d5"
+};
+
+
+  // Firebase initialization
+
+  const app = initializeApp(firebaseConfig);
+
+  const auth = getAuth(app);
+
+  const db = getFirestore(app);
+
+
+  console.log("Firebase initialized");
+
+
+  // ========================================================
+  // DATA
+  // ========================================================
 
   const dayOrders = {
 
-    "Thursday":
+    Thursday:
       "Day 3 — 3:10–4:00 PM · Design of AI Products",
 
-    "Friday":
+    Friday:
       "Day 4 — 8:00–11:30 AM · AI Products + Statistics",
 
-    "Monday":
+    Monday:
       "Day 5 — 9:45–11:30 AM · Placement Training",
 
-    "Tuesday":
+    Tuesday:
       "Day 1 — 4:00–4:50 PM · Disaster",
 
-    "Wednesday":
+    Wednesday:
       "Day 2 — 8:00–11:30 AM · Statistics + Disaster",
 
-    "Saturday":
+    Saturday:
       "Holiday",
 
-    "Sunday":
+    Sunday:
       "Holiday"
 
   };
 
-
-  /* =========================
-     DEFAULT TASKS
-  ========================== */
 
   const defaultTasks = [
 
@@ -904,47 +972,119 @@
   ];
 
 
-  /* =========================
-     DATE FUNCTIONS
-  ========================== */
+  let weekUnsubscribers = [];
 
-  function isoDate(d) {
+  let notesUnsubscribe = null;
 
-    const year = d.getFullYear();
-
-    const month = String(
-      d.getMonth() + 1
-    ).padStart(2, "0");
-
-    const day = String(
-      d.getDate()
-    ).padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
-
-  }
+  let currentUser = null;
 
 
-  function localDate(d = new Date()) {
+  // ========================================================
+  // DATE HELPERS
+  // ========================================================
+
+  function localDate(date = new Date()) {
 
     return new Date(
-      d.getFullYear(),
-      d.getMonth(),
-      d.getDate()
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
     );
 
   }
 
 
-  /* =========================
-     TODAY
-  ========================== */
+  function isoDate(date) {
+
+    const y = date.getFullYear();
+
+    const m = String(date.getMonth() + 1)
+      .padStart(2, "0");
+
+    const d = String(date.getDate())
+      .padStart(2, "0");
+
+    return `${y}-${m}-${d}`;
+
+  }
+
+
+  function getWeekDates() {
+
+    const today = localDate();
+
+    const monday = new Date(today);
+
+    const day = today.getDay() || 7;
+
+    monday.setDate(
+      today.getDate() - day + 1
+    );
+
+    return Array.from(
+      { length: 7 },
+      (_, i) => {
+
+        const date = new Date(monday);
+
+        date.setDate(
+          monday.getDate() + i
+        );
+
+        return date;
+
+      }
+    );
+
+  }
+
+
+  function getTargetDate(selection) {
+
+    const today = localDate();
+
+    if (selection === "Today") {
+
+      return today;
+
+    }
+
+    if (selection === "Tomorrow") {
+
+      const tomorrow = new Date(today);
+
+      tomorrow.setDate(
+        today.getDate() + 1
+      );
+
+      return tomorrow;
+
+    }
+
+    const weekDates = getWeekDates();
+
+    const target = weekDates.find(
+      date =>
+        date.toLocaleDateString(
+          "en-IN",
+          { weekday: "long" }
+        ) === selection
+    );
+
+    return target || today;
+
+  }
+
+
+  // ========================================================
+  // TODAY
+  // ========================================================
 
   function renderToday() {
 
     const d = localDate();
 
-    const name =
+    const dayName =
       d.toLocaleDateString(
         "en-IN",
         { weekday: "long" }
@@ -961,119 +1101,296 @@
       );
 
     const info =
-      dayOrders[name] || "No template";
+      dayOrders[dayName] || "No class template";
 
-    const isHoliday =
+    const holiday =
       info === "Holiday";
 
     document.getElementById(
       "todayInfo"
     ).innerHTML = `
 
-      <div>
-
+      <div style="margin-bottom:8px;">
         <b>${date}</b>
-
-        <span
-          class="pill ${isHoliday ? "holiday" : ""}"
-        >
-          ${escapeHtml(info)}
-        </span>
-
       </div>
+
+      <span class="pill ${
+        holiday
+          ? "holiday"
+          : "today-pill"
+      }">
+        ${escapeHtml(info)}
+      </span>
 
     `;
 
   }
 
 
-  /* =========================
-     WEEK DATES
-  ========================== */
+  // ========================================================
+  // LOGIN
+  // ========================================================
 
-  function getWeekDates() {
+  window.login = async function () {
 
-    const d = localDate();
+    const email =
+      document.getElementById("email")
+        .value
+        .trim();
 
-    const monday = new Date(d);
+    const password =
+      document.getElementById("password")
+        .value;
 
-    const day =
-      d.getDay() || 7;
+    const error =
+      document.getElementById("loginError");
 
-    monday.setDate(
-      d.getDate() - day + 1
-    );
+    error.style.display = "none";
 
-    return Array.from(
-      { length: 7 },
-      (_, i) => {
+    if (!email || !password) {
 
-        const x =
-          new Date(monday);
+      error.textContent =
+        "Please enter both email and password.";
 
-        x.setDate(
-          monday.getDate() + i
-        );
+      error.style.display = "block";
 
-        return x;
-
-      }
-    );
-
-  }
-
-
-  /* =========================
-     LOAD TASKS
-  ========================== */
-
-  function loadTasks() {
-
-    const key =
-      "placementPlannerTasks";
-
-    let saved =
-      JSON.parse(
-        localStorage.getItem(key) || "null"
-      );
-
-
-    if (!saved) {
-
-      saved = {};
-
-      getWeekDates().forEach(
-        (d) => {
-
-          saved[isoDate(d)] =
-            defaultTasks.map(
-              x => [x[0], false]
-            );
-
-        }
-      );
-
-      localStorage.setItem(
-        key,
-        JSON.stringify(saved)
-      );
+      return;
 
     }
 
 
-    return saved;
+    try {
+
+      await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+    } catch (err) {
+
+      console.error(err);
+
+      error.textContent =
+        "Login failed. Check your email/password.";
+
+      error.style.display = "block";
+
+    }
+
+  };
+
+
+  // Enter key login
+
+  document
+    .getElementById("password")
+    .addEventListener(
+      "keydown",
+      event => {
+
+        if (event.key === "Enter") {
+
+          window.login();
+
+        }
+
+      }
+    );
+
+
+  // ========================================================
+  // LOGOUT
+  // ========================================================
+
+  window.logout = async function () {
+
+    await signOut(auth);
+
+  };
+
+
+  // ========================================================
+  // AUTH STATE
+  // ========================================================
+
+  onAuthStateChanged(
+    auth,
+    async user => {
+
+      currentUser = user;
+
+      if (user) {
+
+        document.getElementById(
+          "loginScreen"
+        ).style.display = "none";
+
+        document.getElementById(
+          "app"
+        ).style.display = "block";
+
+        document.getElementById(
+          "userEmail"
+        ).textContent = user.email;
+
+        setSyncStatus(
+          "☁️ Firebase connected"
+        );
+
+        renderToday();
+
+        await initialiseWeek();
+
+        initialiseNotes();
+
+      } else {
+
+        document.getElementById(
+          "loginScreen"
+        ).style.display = "flex";
+
+        document.getElementById(
+          "app"
+        ).style.display = "none";
+
+        currentUser = null;
+
+        cleanupListeners();
+
+      }
+
+    }
+  );
+
+
+  // ========================================================
+  // INITIALISE WEEK
+  // ========================================================
+
+  async function initialiseWeek() {
+
+    cleanupWeekListeners();
+
+    const dates = getWeekDates();
+
+    const weekTasks = {};
+
+    /*
+      First make sure each day has a document.
+
+      If it doesn't exist, create the default tasks.
+    */
+
+    for (const date of dates) {
+
+      const key = isoDate(date);
+
+      const ref =
+        doc(
+          db,
+          "days",
+          key
+        );
+
+      const snapshot =
+        await getDoc(ref);
+
+      if (!snapshot.exists()) {
+
+        await setDoc(
+          ref,
+          {
+            tasks: defaultTasks.map(
+              task => ({
+                text: task[0],
+                done: false
+              })
+            ),
+
+            note: "",
+
+            updatedAt:
+              serverTimestamp(),
+
+            updatedBy:
+              currentUser.email
+
+          }
+        );
+
+      }
+
+    }
+
+
+    /*
+      Listen to every day in this week.
+
+      This is what makes changes appear
+      on another device automatically.
+    */
+
+    dates.forEach(date => {
+
+      const key = isoDate(date);
+
+      const ref =
+        doc(
+          db,
+          "days",
+          key
+        );
+
+      const unsubscribe =
+        onSnapshot(
+          ref,
+          snapshot => {
+
+            if (!snapshot.exists()) {
+
+              return;
+
+            }
+
+            weekTasks[key] =
+              snapshot.data().tasks || [];
+
+            renderWeek(
+              weekTasks
+            );
+
+          },
+
+          error => {
+
+            console.error(
+              "Firestore listener error:",
+              error
+            );
+
+            setSyncStatus(
+              "⚠️ Sync error"
+            );
+
+          }
+        );
+
+
+      weekUnsubscribers.push(
+        unsubscribe
+      );
+
+    });
 
   }
 
 
-  /* =========================
-     RENDER WEEK
-  ========================== */
+  // ========================================================
+  // RENDER WEEK
+  // ========================================================
 
-  function renderWeek() {
-
-    const data =
-      loadTasks();
+  function renderWeek(data) {
 
     const wrap =
       document.getElementById(
@@ -1082,24 +1399,26 @@
 
     wrap.innerHTML = "";
 
+    const grid =
+      document.createElement(
+        "div"
+      );
+
+    grid.className =
+      "dategrid";
+
 
     getWeekDates().forEach(
-      d => {
+      date => {
 
         const key =
-          isoDate(d);
+          isoDate(date);
 
         const day =
-          d.toLocaleDateString(
+          date.toLocaleDateString(
             "en-IN",
             { weekday: "long" }
           );
-
-        const isToday =
-          key === isoDate(
-            localDate()
-          );
-
 
         const box =
           document.createElement(
@@ -1107,12 +1426,16 @@
           );
 
         box.className =
-          "day" +
-          (isToday ? " today" : "");
+          "day " +
+          (
+            key === isoDate(localDate())
+              ? "today"
+              : ""
+          );
 
 
-        const dayInfo =
-          dayOrders[day] || "";
+        const tasks =
+          data[key] || [];
 
 
         box.innerHTML = `
@@ -1122,7 +1445,7 @@
           </h4>
 
           <small>
-            ${d.toLocaleDateString(
+            ${date.toLocaleDateString(
               "en-IN",
               {
                 day: "2-digit",
@@ -1132,7 +1455,9 @@
 
             ·
 
-            ${escapeHtml(dayInfo)}
+            ${escapeHtml(
+              dayOrders[day] || ""
+            )}
           </small>
 
         `;
@@ -1144,8 +1469,18 @@
           );
 
 
-        (data[key] || []).forEach(
-          (t, idx) => {
+        if (!tasks.length) {
+
+          list.innerHTML =
+            `<div class="empty">
+              No tasks yet.
+            </div>`;
+
+        }
+
+
+        tasks.forEach(
+          (task, index) => {
 
             const row =
               document.createElement(
@@ -1153,523 +1488,588 @@
               );
 
             row.className =
-              "task" +
-              (t[1] ? " done" : "");
+              "task " +
+              (
+                task.done
+                  ? "done"
+                  : ""
+              );
 
 
-            row.innerHTML = `
+            const checkbox =
+              document.createElement(
+                "input"
+              );
 
-              <input
-                type="checkbox"
-                ${t[1] ? "checked" : ""}
-                onchange="
-                  toggleTask(
-                    '${key}',
-                    ${idx}
-                  )
-                "
-              >
+            checkbox.type =
+              "checkbox";
 
-              <span>
-                ${escapeHtml(t[0])}
-              </span>
-
-            `;
+            checkbox.checked =
+              Boolean(task.done);
 
 
-            list.appendChild(row);
+            checkbox.addEventListener(
+              "change",
+              () => {
+
+                toggleTask(
+                  key,
+                  index,
+                  checkbox.checked
+                );
+
+              }
+            );
+
+
+            const span =
+              document.createElement(
+                "span"
+              );
+
+            span.textContent =
+              task.text;
+
+
+            row.appendChild(
+              checkbox
+            );
+
+            row.appendChild(
+              span
+            );
+
+            list.appendChild(
+              row
+            );
 
           }
         );
 
 
-        box.appendChild(list);
+        box.appendChild(
+          list
+        );
 
-        wrap.appendChild(box);
+        grid.appendChild(
+          box
+        );
 
       }
     );
 
-  }
 
-
-  /* =========================
-     TOGGLE TASK
-  ========================== */
-
-  function toggleTask(
-    key,
-    idx
-  ) {
-
-    const data =
-      loadTasks();
-
-    if (!data[key]) {
-      return;
-    }
-
-    if (!data[key][idx]) {
-      return;
-    }
-
-
-    data[key][idx][1] =
-      !data[key][idx][1];
-
-
-    localStorage.setItem(
-      "placementPlannerTasks",
-      JSON.stringify(data)
+    wrap.appendChild(
+      grid
     );
 
-
-    renderWeek();
-
   }
 
 
-  /* =========================
-     ADD TASK
-  ========================== */
+  // ========================================================
+  // TOGGLE TASK
+  // ========================================================
 
-  function addTask() {
+  window.toggleTask =
+    async function (
+      dateKey,
+      index,
+      checked
+    ) {
+
+      try {
+
+        const ref =
+          doc(
+            db,
+            "days",
+            dateKey
+          );
+
+        const snapshot =
+          await getDoc(ref);
+
+        if (!snapshot.exists()) {
+
+          return;
+
+        }
+
+        const data =
+          snapshot.data();
+
+        const tasks =
+          data.tasks || [];
+
+        if (!tasks[index]) {
+
+          return;
+
+        }
+
+        tasks[index].done =
+          checked;
+
+
+        await setDoc(
+          ref,
+          {
+            tasks,
+
+            updatedAt:
+              serverTimestamp(),
+
+            updatedBy:
+              currentUser.email
+
+          },
+          { merge: true }
+        );
+
+
+        setSyncStatus(
+          "☁️ Saved"
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Task update failed:",
+          error
+        );
+
+        setSyncStatus(
+          "⚠️ Save failed"
+        );
+
+      }
+
+    };
+
+
+  // ========================================================
+  // ADD TASK
+  // ========================================================
+
+  window.addTask = async function () {
+
+    const input =
+      document.getElementById(
+        "taskText"
+      );
+
+    const select =
+      document.getElementById(
+        "taskDay"
+      );
 
     const text =
-      document
-        .getElementById("taskText")
-        .value
-        .trim();
-
+      input.value.trim();
 
     if (!text) {
 
-      alert(
-        "Enter a task first."
-      );
-
       return;
 
     }
 
 
-    const selected =
-      document
-        .getElementById("taskDay")
-        .value;
-
-
-    const dates =
-      getWeekDates();
-
-
-    let target =
-      dates.find(
-        d =>
-          d.toLocaleDateString(
-            "en-IN",
-            { weekday: "long" }
-          ) === selected
+    const targetDate =
+      getTargetDate(
+        select.value
       );
-
-
-    if (
-      selected === "Today"
-    ) {
-
-      target =
-        localDate();
-
-    }
-
-
-    if (
-      selected === "Tomorrow"
-    ) {
-
-      target =
-        localDate();
-
-      target.setDate(
-        target.getDate() + 1
-      );
-
-    }
-
-
-    const data =
-      loadTasks();
 
     const key =
-      isoDate(target);
+      isoDate(targetDate);
 
 
-    data[key] =
-      data[key] || [];
+    try {
+
+      const ref =
+        doc(
+          db,
+          "days",
+          key
+        );
+
+      const snapshot =
+        await getDoc(ref);
 
 
-    data[key].push([
-      text,
-      false
-    ]);
+      let tasks = [];
+
+      let note = "";
 
 
-    localStorage.setItem(
-      "placementPlannerTasks",
-      JSON.stringify(data)
-    );
+      if (snapshot.exists()) {
+
+        const data =
+          snapshot.data();
+
+        tasks =
+          data.tasks || [];
+
+        note =
+          data.note || "";
+
+      }
 
 
-    document.getElementById(
-      "taskText"
-    ).value = "";
+      tasks.push({
+
+        text,
+
+        done: false
+
+      });
 
 
-    renderWeek();
+      await setDoc(
+        ref,
+        {
+          tasks,
 
-  }
+          note,
 
+          updatedAt:
+            serverTimestamp(),
 
-  /* =========================
-     RESET TASKS
-  ========================== */
+          updatedBy:
+            currentUser.email
 
-  function resetTasks() {
-
-    const confirmed =
-      confirm(
-        "Reset this week to the default task list?"
+        },
+        { merge: true }
       );
 
 
-    if (!confirmed) {
-      return;
+      input.value = "";
+
+      setSyncStatus(
+        "☁️ Task saved"
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Add task failed:",
+        error
+      );
+
+      alert(
+        "Could not save the task."
+      );
+
     }
-
-
-    localStorage.removeItem(
-      "placementPlannerTasks"
-    );
-
-
-    renderWeek();
-
-  }
-
-
-  /* =========================
-     NOTES
-  ========================== */
-
-  function saveNotes() {
-
-    const value =
-      document.getElementById(
-        "notes"
-      ).value;
-
-
-    localStorage.setItem(
-      "placementPlannerNotes",
-      value
-    );
-
-
-    alert(
-      "Note saved."
-    );
-
-  }
-
-
-  function clearNotes() {
-
-    document.getElementById(
-      "notes"
-    ).value = "";
-
-  }
-
-
-  /* =========================
-     ESCAPE HTML
-  ========================== */
-
-  function escapeHtml(s) {
-
-    return String(s).replace(
-      /[&<>"']/g,
-      m => ({
-
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#039;"
-
-      }[m])
-    );
-
-  }
-
-
-  /* =========================
-     INITIALIZE PAGE
-  ========================== */
-
-  document.getElementById(
-    "notes"
-  ).value =
-    localStorage.getItem(
-      "placementPlannerNotes"
-    ) || "";
-
-
-  renderToday();
-
-  renderWeek();
-
-</script>
-
-
-<!-- =========================================================
-     FIREBASE
-========================================================= -->
-
-<script type="module">
-
-  import {
-    initializeApp
-  } from
-  "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-
-
-  import {
-    getAuth,
-    signInWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged
-  } from
-  "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
-
-
-  import {
-    getFirestore
-  } from
-  "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
-
-
-  /* =========================
-     FIREBASE CONFIG
-  ========================== */
-
-  const firebaseConfig = {
-
-    apiKey:
-      "AIzaSyBJoPaDm1Xk4SGJa4AKwxb1AJADjl-1qjU",
-
-    authDomain:
-      "kavin-placement.firebaseapp.com",
-
-    projectId:
-      "kavin-placement",
-
-    storageBucket:
-      "kavin-placement.firebasestorage.app",
-
-    messagingSenderId:
-      "210089235152",
-
-    appId:
-      "1:210089235152:web:4b6bbcbc7032fd5e5ac4d"
 
   };
 
 
-  /* =========================
-     INITIALIZE FIREBASE
-  ========================== */
+  // ========================================================
+  // RESET TASKS
+  // ========================================================
 
-  const app =
-    initializeApp(
-      firebaseConfig
-    );
-
-
-  const auth =
-    getAuth(app);
-
-
-  const db =
-    getFirestore(app);
-
-
-  console.log(
-    "Firebase connected!"
-  );
-
-
-  /* =========================
-     LOGIN
-  ========================== */
-
-  window.login =
+  window.resetTasks =
     async function () {
 
-      const email =
-        document
-          .getElementById("email")
-          .value
-          .trim();
+      const confirmed =
+        confirm(
+          "Reset this week to the default task list?"
+        );
 
-
-      const password =
-        document
-          .getElementById("password")
-          .value;
-
-
-      const message =
-        document
-          .getElementById("authMessage");
-
-
-      if (!email || !password) {
-
-        message.textContent =
-          "Enter your email and password.";
+      if (!confirmed) {
 
         return;
 
       }
 
 
-      message.textContent =
-        "Logging in...";
-
-
       try {
 
-        await signInWithEmailAndPassword(
-          auth,
-          email,
-          password
+        for (
+          const date
+          of getWeekDates()
+        ) {
+
+          const key =
+            isoDate(date);
+
+          const ref =
+            doc(
+              db,
+              "days",
+              key
+            );
+
+
+          await setDoc(
+            ref,
+            {
+              tasks:
+                defaultTasks.map(
+                  task => ({
+                    text: task[0],
+                    done: false
+                  })
+                ),
+
+              updatedAt:
+                serverTimestamp(),
+
+              updatedBy:
+                currentUser.email
+
+            },
+            { merge: true }
+          );
+
+        }
+
+
+        setSyncStatus(
+          "☁️ Week reset"
         );
 
-
-        message.textContent = "";
-
-      }
-
-      catch (error) {
+      } catch (error) {
 
         console.error(
-          "Login error:",
+          "Reset failed:",
           error
         );
 
-
-        message.textContent =
-          "Login failed. Check your email and password.";
+        alert(
+          "Could not reset the week."
+        );
 
       }
 
     };
 
 
-  /* =========================
-     LOGOUT
-  ========================== */
+  // ========================================================
+  // NOTES
+  // ========================================================
 
-  window.logout =
-    async function () {
+  function initialiseNotes() {
 
-      try {
+    if (notesUnsubscribe) {
 
-        await signOut(auth);
+      notesUnsubscribe();
 
-      }
-
-      catch (error) {
-
-        console.error(
-          "Logout error:",
-          error
-        );
-
-      }
-
-    };
-
-
-  /* =========================
-     AUTH STATE
-  ========================== */
-
-  onAuthStateChanged(
-    auth,
-    (user) => {
-
-      const loginForm =
-        document.getElementById(
-          "loginForm"
-        );
-
-
-      const loggedIn =
-        document.getElementById(
-          "loggedIn"
-        );
-
-
-      const userEmail =
-        document.getElementById(
-          "userEmail"
-        );
-
-
-      if (user) {
-
-        console.log(
-          "Logged in:",
-          user.email
-        );
-
-
-        loginForm.style.display =
-          "none";
-
-
-        loggedIn.style.display =
-          "flex";
-
-
-        userEmail.textContent =
-          "👋 " + user.email;
-
-      }
-
-      else {
-
-        console.log(
-          "Not logged in"
-        );
-
-
-        loginForm.style.display =
-          "block";
-
-
-        loggedIn.style.display =
-          "none";
-
-      }
+      notesUnsubscribe = null;
 
     }
-  );
+
+
+    const todayKey =
+      isoDate(
+        localDate()
+      );
+
+
+    const ref =
+      doc(
+        db,
+        "days",
+        todayKey
+      );
+
+
+    notesUnsubscribe =
+      onSnapshot(
+        ref,
+        snapshot => {
+
+          if (!snapshot.exists()) {
+
+            return;
+
+          }
+
+          const data =
+            snapshot.data();
+
+          document.getElementById(
+            "notes"
+          ).value =
+            data.note || "";
+
+        },
+
+        error => {
+
+          console.error(
+            "Notes listener error:",
+            error
+          );
+
+        }
+      );
+
+  }
+
+
+  window.saveNotes =
+    async function () {
+
+      const note =
+        document.getElementById(
+          "notes"
+        ).value;
+
+
+      const todayKey =
+        isoDate(
+          localDate()
+        );
+
+
+      try {
+
+        const ref =
+          doc(
+            db,
+            "days",
+            todayKey
+          );
+
+
+        await setDoc(
+          ref,
+          {
+            note,
+
+            updatedAt:
+              serverTimestamp(),
+
+            updatedBy:
+              currentUser.email
+
+          },
+          { merge: true }
+        );
+
+
+        setSyncStatus(
+          "☁️ Note saved"
+        );
+
+
+        alert(
+          "Note saved to the shared planner."
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Note save failed:",
+          error
+        );
+
+        alert(
+          "Could not save the note."
+        );
+
+      }
+
+    };
+
+
+  window.clearNotesBox =
+    function () {
+
+      document.getElementById(
+        "notes"
+      ).value = "";
+
+    };
+
+
+  // ========================================================
+  // CLEANUP
+  // ========================================================
+
+  function cleanupWeekListeners() {
+
+    weekUnsubscribers.forEach(
+      unsubscribe => {
+
+        try {
+
+          unsubscribe();
+
+        } catch (e) {}
+
+      }
+    );
+
+    weekUnsubscribers = [];
+
+  }
+
+
+  function cleanupListeners() {
+
+    cleanupWeekListeners();
+
+    if (notesUnsubscribe) {
+
+      notesUnsubscribe();
+
+      notesUnsubscribe = null;
+
+    }
+
+  }
+
+
+  // ========================================================
+  // SYNC STATUS
+  // ========================================================
+
+  function setSyncStatus(text) {
+
+    const element =
+      document.getElementById(
+        "syncStatus"
+      );
+
+    if (element) {
+
+      element.textContent =
+        text;
+
+    }
+
+  }
+
+
+  // ========================================================
+  // SECURITY / HTML ESCAPE
+  // ========================================================
+
+  function escapeHtml(value) {
+
+    return String(value)
+      .replace(
+        /[&<>"']/g,
+        character => ({
+
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#039;"
+
+        })[character]
+      );
+
+  }
+
+
+  // Initial rendering
+
+  renderToday();
 
 </script>
-
 
 </body>
 </html>
