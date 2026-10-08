@@ -2,458 +2,1674 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Kavin — Placement & Semester Planner</title>
+
 <style>
   :root {
-    --bg:#f5f7fb; --card:#fff; --text:#172033; --muted:#687386;
-    --blue:#2563eb; --blue2:#dbeafe; --green:#16a34a; --red:#dc2626;
-    --border:#e5e7eb; --yellow:#f59e0b;
+    --bg: #f5f7fb;
+    --card: #ffffff;
+    --text: #172033;
+    --muted: #687386;
+    --blue: #2563eb;
+    --blue2: #dbeafe;
+    --green: #16a34a;
+    --red: #dc2626;
+    --border: #e5e7eb;
+    --yellow: #f59e0b;
   }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
-  header{background:#123f78;color:white;padding:24px 5%;position:sticky;top:0;z-index:5}
-  header h1{margin:0 0 6px;font-size:24px}
-  header p{margin:0;color:#dbeafe}
-  main{max-width:1200px;margin:24px auto;padding:0 18px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:0 3px 12px #00000008}
-  h2{font-size:18px;margin:0 0 14px}
-  h3{font-size:15px;margin:0 0 8px}
-  .muted{color:var(--muted);font-size:13px}
-  .pill{display:inline-block;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:700;background:var(--blue2);color:#1d4ed8;margin:2px}
-  .holiday{background:#fee2e2;color:#b91c1c}
-  .today{background:#dcfce7;color:#166534}
-  .danger{color:var(--red)}
-  .success{color:var(--green)}
-  .timeline{display:grid;gap:8px}
-  .slot{padding:10px 12px;border-left:4px solid var(--blue);background:#f8fafc;border-radius:8px}
-  .slot strong{display:block}
-  input,select,textarea,button{font:inherit}
-  input,select,textarea{width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:8px;background:white}
-  textarea{min-height:90px;resize:vertical}
-  button{border:0;border-radius:8px;padding:9px 13px;cursor:pointer;font-weight:700}
-  .primary{background:var(--blue);color:white}.secondary{background:#eef2f7;color:#273449}
-  .dangerbtn{background:#fee2e2;color:#991b1b}
-  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .row > *{flex:1}
-  .task{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
-  .task:last-child{border-bottom:0}
-  .task input[type=checkbox]{width:auto}
-  .task.done span{text-decoration:line-through;color:var(--muted)}
-  .week{margin-top:18px}
-  .weekhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
-  .dategrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
-  .day{border:1px solid var(--border);border-radius:10px;padding:12px;background:#fff}
-  .day.today{border:2px solid #86efac}
-  .day h4{margin:0 0 6px}
-  .day small{color:var(--muted)}
-  .day ul{padding-left:18px;margin:8px 0 0;font-size:13px}
-  .stat{font-size:26px;font-weight:800}
-  .small{font-size:12px}
-  .footer{text-align:center;color:var(--muted);padding:25px}
-  @media(max-width:600px){header{padding:18px}.card{padding:14px}}
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  /* =========================
+     HEADER
+  ========================= */
+
+  header {
+    background: #123f78;
+    color: #ffffff;
+    padding: 24px 5%;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+
+  header h1 {
+    margin: 0 0 6px;
+    font-size: 24px;
+    color: #ffffff;
+  }
+
+  header p {
+    margin: 0;
+    color: #dbeafe;
+  }
+
+  #authBox {
+    margin-top: 15px;
+    max-width: 650px;
+  }
+
+  #loginForm > div {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  #loginForm input {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  #authMessage {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #ffffff;
+  }
+
+  #loggedIn {
+    display: none;
+    align-items: center;
+    gap: 8px;
+  }
+
+  #userEmail {
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  /* =========================
+     MAIN
+  ========================= */
+
+  main {
+    max-width: 1200px;
+    margin: 24px auto;
+    padding: 0 18px;
+    color: var(--text);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(280px, 1fr)
+    );
+    gap: 16px;
+  }
+
+  /* =========================
+     CARDS
+  ========================= */
+
+  .card {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.03);
+    color: var(--text);
+  }
+
+  .card h2,
+  .card h3,
+  .card h4,
+  .card strong {
+    color: var(--text);
+  }
+
+  h2 {
+    font-size: 18px;
+    margin: 0 0 14px;
+  }
+
+  h3 {
+    font-size: 15px;
+    margin: 0 0 8px;
+  }
+
+  .muted {
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  /* =========================
+     PILLS
+  ========================= */
+
+  .pill {
+    display: inline-block;
+    border-radius: 999px;
+    padding: 5px 9px;
+    font-size: 12px;
+    font-weight: 700;
+    background: var(--blue2);
+    color: #1d4ed8;
+    margin: 2px;
+  }
+
+  .holiday {
+    background: #fee2e2;
+    color: #b91c1c;
+  }
+
+  .today {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .danger {
+    color: var(--red);
+  }
+
+  .success {
+    color: var(--green);
+  }
+
+  /* =========================
+     TIMELINE
+  ========================= */
+
+  .timeline {
+    display: grid;
+    gap: 8px;
+  }
+
+  .slot {
+    padding: 10px 12px;
+    border-left: 4px solid var(--blue);
+    background: #f8fafc;
+    border-radius: 8px;
+    color: var(--text);
+  }
+
+  .slot strong {
+    display: block;
+    color: var(--text);
+  }
+
+  /* =========================
+     INPUTS
+  ========================= */
+
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: 9px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #172033;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #687386;
+  }
+
+  textarea {
+    min-height: 90px;
+    resize: vertical;
+  }
+
+  /* =========================
+     BUTTONS
+  ========================= */
+
+  button {
+    border: 0;
+    border-radius: 8px;
+    padding: 9px 13px;
+    cursor: pointer;
+    font-weight: 700;
+  }
+
+  button:hover {
+    opacity: 0.92;
+  }
+
+  .primary {
+    background: var(--blue);
+    color: #ffffff;
+  }
+
+  .secondary {
+    background: #eef2f7;
+    color: #273449;
+  }
+
+  .dangerbtn {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  /* =========================
+     ROW
+  ========================= */
+
+  .row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .row > * {
+    flex: 1;
+  }
+
+  /* =========================
+     TASKS
+  ========================= */
+
+  .task {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  .task:last-child {
+    border-bottom: 0;
+  }
+
+  .task input[type="checkbox"] {
+    width: auto;
+    flex: 0 0 auto;
+  }
+
+  .task span {
+    color: var(--text);
+  }
+
+  .task.done span {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+
+  /* =========================
+     WEEK
+  ========================= */
+
+  .week {
+    margin-top: 18px;
+  }
+
+  .weekhead {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .dategrid {
+    display: grid;
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(180px, 1fr)
+    );
+    gap: 10px;
+  }
+
+  .day {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    background: #ffffff;
+    color: var(--text);
+  }
+
+  .day.today {
+    border: 2px solid #86efac;
+  }
+
+  .day h4 {
+    margin: 0 0 6px;
+    color: var(--text);
+  }
+
+  .day small {
+    color: var(--muted);
+  }
+
+  /* =========================
+     STATS
+  ========================= */
+
+  .stat {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--text);
+  }
+
+  .small {
+    font-size: 12px;
+  }
+
+  /* =========================
+     FOOTER
+  ========================= */
+
+  .footer {
+    text-align: center;
+    color: var(--muted);
+    padding: 25px;
+  }
+
+  /* =========================
+     MOBILE
+  ========================= */
+
+  @media (max-width: 600px) {
+
+    header {
+      padding: 18px;
+    }
+
+    header h1 {
+      font-size: 21px;
+    }
+
+    .card {
+      padding: 14px;
+    }
+
+    .weekhead {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .row > * {
+      width: 100%;
+    }
+  }
 </style>
 </head>
+
+
 <body>
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
 <header>
-  <header>
-    <h1>🎯 Placement + Semester Planner</h1>
-    <p>Simple weekly control panel — update it every day. Goal: stay consistent through 20 Nov 2026.</p>
 
-    <div id="authBox" style="margin-top:15px;max-width:500px;">
-      <div id="loginForm">
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <input
-            id="email"
-            type="email"
-            placeholder="Email"
-            style="flex:1;min-width:200px;"
-          >
+  <h1>🎯 Placement + Semester Planner</h1>
 
-          <input
-            id="password"
-            type="password"
-            placeholder="Password"
-            style="flex:1;min-width:200px;"
-          >
+  <p>
+    Simple weekly control panel — update it every day.
+    Goal: stay consistent through 20 Nov 2026.
+  </p>
 
-          <button class="primary" onclick="login()">Login</button>
-        </div>
 
-        <div id="authMessage" style="margin-top:8px;font-size:13px;"></div>
+  <!-- =========================
+       AUTHENTICATION
+  ========================== -->
+
+  <div id="authBox">
+
+    <!-- LOGIN FORM -->
+
+    <div id="loginForm">
+
+      <div>
+
+        <input
+          id="email"
+          type="email"
+          placeholder="Email"
+        >
+
+        <input
+          id="password"
+          type="password"
+          placeholder="Password"
+        >
+
+        <button
+          class="primary"
+          onclick="login()"
+        >
+          Login
+        </button>
+
       </div>
 
-    <div id="loggedIn" style="display:none;">
+      <div id="authMessage"></div>
+
+    </div>
+
+
+    <!-- LOGGED IN -->
+
+    <div id="loggedIn">
+
       <span id="userEmail"></span>
-      <button class="secondary" onclick="logout()" style="margin-left:8px;">
+
+      <button
+        class="secondary"
+        onclick="logout()"
+      >
         Logout
       </button>
+
     </div>
+
   </div>
+
 </header>
 
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
 <main>
+
+
+  <!-- =========================
+       TOP THREE CARDS
+  ========================== -->
+
   <div class="grid">
+
+
+    <!-- TODAY -->
+
     <section class="card">
+
       <h2>📌 Today</h2>
+
       <div id="todayInfo"></div>
+
       <div style="margin-top:12px">
-        <div class="muted">Current focus</div>
-        <div id="focus" class="stat">Placement</div>
+
+        <div class="muted">
+          Current focus
+        </div>
+
+        <div
+          id="focus"
+          class="stat"
+        >
+          Placement
+        </div>
+
       </div>
+
     </section>
 
+
+    <!-- DAILY BASICS -->
+
     <section class="card">
+
       <h2>⏱️ Daily basics</h2>
+
       <div class="timeline">
-        <div class="slot"><strong>Weekdays — 7:00 AM</strong>Wake up</div>
-        <div class="slot"><strong>Weekends — 9:00 AM</strong>Wake up</div>
-        <div class="slot"><strong>Target — 12:00 AM</strong>Sleep (fix from 1:00 AM)</div>
-        <div class="slot"><strong>~15 min</strong>Home ↔ College commute</div>
-        <div class="slot"><strong>~7:00–8:30 PM</strong>Gym</div>
-        <div class="slot"><strong>5 min + 5 min</strong>Spanish + Hindi Duolingo</div>
+
+        <div class="slot">
+          <strong>Weekdays — 7:00 AM</strong>
+          Wake up
+        </div>
+
+        <div class="slot">
+          <strong>Weekends — 9:00 AM</strong>
+          Wake up
+        </div>
+
+        <div class="slot">
+          <strong>Target — 12:00 AM</strong>
+          Sleep (fix from 1:00 AM)
+        </div>
+
+        <div class="slot">
+          <strong>~15 min</strong>
+          Home ↔ College commute
+        </div>
+
+        <div class="slot">
+          <strong>~7:00–8:30 PM</strong>
+          Gym
+        </div>
+
+        <div class="slot">
+          <strong>5 min + 5 min</strong>
+          Spanish + Hindi Duolingo
+        </div>
+
       </div>
+
     </section>
 
+
+    <!-- DAY ORDER -->
+
     <section class="card">
+
       <h2>🏫 Day Order templates</h2>
+
       <div class="timeline">
-        <div class="slot"><strong>Day 1 — 4:00–4:50 PM</strong>Disaster Mitigation & Management</div>
-        <div class="slot"><strong>Day 2 — 8:00–11:30 AM</strong>8:00–9:40 Statistics → 9:45–11:30 Disaster</div>
-        <div class="slot"><strong>Day 3 — 3:10–4:00 PM</strong>Design of AI Products</div>
-        <div class="slot"><strong>Day 4 — 8:00–11:30 AM</strong>8:00–9:40 AI Products → 9:45–11:30 Statistics</div>
-        <div class="slot"><strong>Day 5 — 9:45–11:30 AM</strong>Placement Training (tentative)</div>
+
+        <div class="slot">
+          <strong>Day 1 — 4:00–4:50 PM</strong>
+          Disaster Mitigation & Management
+        </div>
+
+        <div class="slot">
+          <strong>Day 2 — 8:00–11:30 AM</strong>
+          8:00–9:40 Statistics → 9:45–11:30 Disaster
+        </div>
+
+        <div class="slot">
+          <strong>Day 3 — 3:10–4:00 PM</strong>
+          Design of AI Products
+        </div>
+
+        <div class="slot">
+          <strong>Day 4 — 8:00–11:30 AM</strong>
+          8:00–9:40 AI Products → 9:45–11:30 Statistics
+        </div>
+
+        <div class="slot">
+          <strong>Day 5 — 9:45–11:30 AM</strong>
+          Placement Training (tentative)
+        </div>
+
       </div>
+
     </section>
+
   </div>
 
+
+  <!-- =====================================================
+       WEEK PLAN
+  ====================================================== -->
+
   <section class="card week">
+
     <div class="weekhead">
+
       <div>
+
         <h2>🗓️ This week's plan</h2>
-        <div class="muted">Edit the tasks below. Changes are saved in this browser.</div>
+
+        <div class="muted">
+          Edit the tasks below.
+          Changes are saved in this browser.
+        </div>
+
       </div>
-      <button class="secondary" onclick="resetTasks()">Reset tasks</button>
+
+      <button
+        class="secondary"
+        onclick="resetTasks()"
+      >
+        Reset tasks
+      </button>
+
     </div>
+
     <div id="weekTasks"></div>
+
   </section>
 
+
+  <!-- =====================================================
+       PLACEMENT ROADMAP
+  ====================================================== -->
+
   <section class="card week">
+
     <h2>🚀 Placement roadmap</h2>
+
     <div class="grid">
+
+
       <div>
+
         <h3>DSA</h3>
-        <div class="muted">Arrays · Strings · Linked List · Binary Search · Recursion · Trees · Graphs · DP</div>
+
+        <div class="muted">
+          Arrays · Strings · Linked List · Binary Search ·
+          Recursion · Trees · Graphs · DP
+        </div>
+
       </div>
+
+
       <div>
+
         <h3>CSE / AI core</h3>
-        <div class="muted">OOP · DBMS · OS · CN · SQL · Language basics · AI basics · System Design</div>
+
+        <div class="muted">
+          OOP · DBMS · OS · CN · SQL · Language basics ·
+          AI basics · System Design
+        </div>
+
       </div>
+
+
       <div>
+
         <h3>Resume / profile</h3>
-        <div class="muted">Projects · Skills · Internships · Achievements · Certifications · POR · Extra activities</div>
+
+        <div class="muted">
+          Projects · Skills · Internships · Achievements ·
+          Certifications · POR · Extra activities
+        </div>
+
       </div>
+
+
       <div>
+
         <h3>Miscellaneous</h3>
-        <div class="muted">Aptitude · Communication · Puzzles/SG · HR questions · Introduction</div>
+
+        <div class="muted">
+          Aptitude · Communication · Puzzles/SG ·
+          HR questions · Introduction
+        </div>
+
       </div>
+
     </div>
+
   </section>
 
+
+  <!-- =====================================================
+       ADD TASK
+  ====================================================== -->
+
   <section class="card week">
+
     <h2>➕ Add / update a task</h2>
+
     <div class="row">
-      <input id="taskText" placeholder="Example: Finish FT3 Unit 4 revision">
+
+      <input
+        id="taskText"
+        placeholder="Example: Finish FT3 Unit 4 revision"
+      >
+
       <select id="taskDay">
-        <option>Today</option><option>Tomorrow</option><option>Monday</option><option>Tuesday</option>
-        <option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+
+        <option>Today</option>
+        <option>Tomorrow</option>
+
+        <option>Monday</option>
+        <option>Tuesday</option>
+        <option>Wednesday</option>
+        <option>Thursday</option>
+        <option>Friday</option>
+        <option>Saturday</option>
+        <option>Sunday</option>
+
       </select>
-      <button class="primary" onclick="addTask()">Add task</button>
+
+      <button
+        class="primary"
+        onclick="addTask()"
+      >
+        Add task
+      </button>
+
     </div>
-    <p class="muted">Use this for assignments, tests, placement tests, presentations, applications, etc.</p>
+
+    <p class="muted">
+      Use this for assignments, tests, placement tests,
+      presentations, applications, etc.
+    </p>
+
   </section>
 
+
+  <!-- =====================================================
+       DEADLINES
+  ====================================================== -->
+
   <section class="card week">
+
     <h2>📝 Important deadlines</h2>
+
     <div class="timeline">
-      <div class="slot"><strong>9 Oct 2026</strong>Project presentation — stated as the last date for remaining teams.</div>
-      <div class="slot"><strong>14 Oct 2026</strong>FT3 test — Unit 4 + Unit 5.</div>
-      <div class="slot"><strong>October 2026</strong>Disaster FT3 exam after the 30th + presentation/case study work.</div>
-      <div class="slot"><strong>20 Nov 2026</strong>🔥 Last working day for this semester.</div>
+
+      <div class="slot">
+        <strong>9 Oct 2026</strong>
+        Project presentation — stated as the last date
+        for remaining teams.
+      </div>
+
+      <div class="slot">
+        <strong>14 Oct 2026</strong>
+        FT3 test — Unit 4 + Unit 5.
+      </div>
+
+      <div class="slot">
+        <strong>October 2026</strong>
+        Disaster FT3 exam after the 30th +
+        presentation/case study work.
+      </div>
+
+      <div class="slot">
+        <strong>20 Nov 2026</strong>
+        🔥 Last working day for this semester.
+      </div>
+
     </div>
+
   </section>
+
+
+  <!-- =====================================================
+       NOTES
+  ====================================================== -->
 
   <section class="card week">
+
     <h2>✏️ Quick daily note</h2>
-    <textarea id="notes" placeholder="What happened today? What needs to move to tomorrow?"></textarea>
-    <div class="row" style="margin-top:8px">
-      <button class="primary" onclick="saveNotes()">Save note</button>
-      <button class="secondary" onclick="document.getElementById('notes').value=''">Clear box</button>
+
+    <textarea
+      id="notes"
+      placeholder="What happened today? What needs to move to tomorrow?"
+    ></textarea>
+
+    <div
+      class="row"
+      style="margin-top:8px"
+    >
+
+      <button
+        class="primary"
+        onclick="saveNotes()"
+      >
+        Save note
+      </button>
+
+      <button
+        class="secondary"
+        onclick="clearNotes()"
+      >
+        Clear box
+      </button>
+
     </div>
+
   </section>
 
-  <div class="footer">Keep it simple: <b>DSA + aptitude + college + health + sleep.</b> Consistency beats a 12-hour timetable you can't repeat.</div>
+
+  <!-- =====================================================
+       FOOTER
+  ====================================================== -->
+
+  <div class="footer">
+
+    Keep it simple:
+    <b>DSA + aptitude + college + health + sleep.</b>
+
+    Consistency beats a 12-hour timetable
+    you can't repeat.
+
+  </div>
+
 </main>
 
+
+<!-- =========================================================
+     NORMAL JAVASCRIPT
+========================================================= -->
+
 <script>
-const dayOrders = {
-  "Thursday": "Day 3 — 3:10–4:00 PM · Design of AI Products",
-  "Friday": "Day 4 — 8:00–11:30 AM · AI Products + Statistics",
-  "Monday": "Day 5 — 9:45–11:30 AM · Placement Training",
-  "Tuesday": "Day 1 — 4:00–4:50 PM · Disaster",
-  "Wednesday": "Day 2 — 8:00–11:30 AM · Statistics + Disaster",
-  "Saturday": "Holiday",
-  "Sunday": "Holiday"
-};
 
-const defaultTasks = [
-  ["DSA — 60 min", false], ["Aptitude — 45 min", false],
-  ["AI / CSE literacy — 30 min", false], ["College work / revision — 60 min", false],
-  ["Gym — ~7:00 PM", false], ["Spanish — 5 min", false], ["Hindi — 5 min", false]
-];
+  /* =========================
+     DAY ORDERS
+  ========================== */
 
-function isoDate(d){ return d.toISOString().slice(0,10); }
-function localDate(d=new Date()){ return new Date(d.getFullYear(),d.getMonth(),d.getDate()); }
+  const dayOrders = {
 
-function renderToday(){
-  const d=localDate();
-  const name=d.toLocaleDateString('en-IN',{weekday:'long'});
-  const date=d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
-  const info=dayOrders[name] || "No template";
-  document.getElementById('todayInfo').innerHTML =
-    `<div><b>${date}</b> <span class="pill ${info==='Holiday'?'holiday':''}">${info}</span></div>`;
-}
+    "Thursday":
+      "Day 3 — 3:10–4:00 PM · Design of AI Products",
 
-function getWeekDates(){
-  const d=localDate();
-  const monday=new Date(d);
-  const day=d.getDay() || 7;
-  monday.setDate(d.getDate()-day+1);
-  return Array.from({length:7},(_,i)=>{const x=new Date(monday);x.setDate(monday.getDate()+i);return x;});
-}
+    "Friday":
+      "Day 4 — 8:00–11:30 AM · AI Products + Statistics",
 
-function loadTasks(){
-  const key='placementPlannerTasks';
-  let saved=JSON.parse(localStorage.getItem(key)||'null');
-  if(!saved){ saved={}; getWeekDates().forEach((d,i)=>saved[isoDate(d)]=defaultTasks.map(x=>[x[0],false])); localStorage.setItem(key,JSON.stringify(saved)); }
-  return saved;
-}
+    "Monday":
+      "Day 5 — 9:45–11:30 AM · Placement Training",
 
-function renderWeek(){
-  const data=loadTasks();
-  const wrap=document.getElementById('weekTasks');
-  wrap.innerHTML='';
-  getWeekDates().forEach(d=>{
-    const key=isoDate(d), day=d.toLocaleDateString('en-IN',{weekday:'long'});
-    const box=document.createElement('div'); box.className='day '+(key===isoDate(localDate())?'today':'');
-    box.innerHTML=`<h4>${day}</h4><small>${d.toLocaleDateString('en-IN',{day:'2-digit',month:'short'})} · ${dayOrders[day]||''}</small>`;
-    const list=document.createElement('div');
-    (data[key]||[]).forEach((t,idx)=>{
-      const row=document.createElement('div'); row.className='task '+(t[1]?'done':'');
-      row.innerHTML=`<input type="checkbox" ${t[1]?'checked':''} onchange="toggleTask('${key}',${idx})"><span>${escapeHtml(t[0])}</span>`;
-      list.appendChild(row);
-    });
-    box.appendChild(list); wrap.appendChild(box);
-  });
-}
+    "Tuesday":
+      "Day 1 — 4:00–4:50 PM · Disaster",
 
-function toggleTask(key,idx){
-  const data=loadTasks(); data[key][idx][1]=!data[key][idx][1];
-  localStorage.setItem('placementPlannerTasks',JSON.stringify(data)); renderWeek();
-}
+    "Wednesday":
+      "Day 2 — 8:00–11:30 AM · Statistics + Disaster",
 
-function addTask(){
-  const text=document.getElementById('taskText').value.trim(); if(!text)return;
-  const selected=document.getElementById('taskDay').value;
-  const dates=getWeekDates();
-  let target=dates.find(d=>d.toLocaleDateString('en-IN',{weekday:'long'})===selected);
-  if(selected==='Today') target=localDate();
-  if(selected==='Tomorrow'){target=localDate();target.setDate(target.getDate()+1);}
-  const data=loadTasks(), key=isoDate(target);
-  data[key]=data[key]||[]; data[key].push([text,false]);
-  localStorage.setItem('placementPlannerTasks',JSON.stringify(data));
-  document.getElementById('taskText').value=''; renderWeek();
-}
+    "Saturday":
+      "Holiday",
 
-function resetTasks(){
-  if(!confirm('Reset this week to the default task list?'))return;
-  localStorage.removeItem('placementPlannerTasks'); renderWeek();
-}
+    "Sunday":
+      "Holiday"
 
-function saveNotes(){
-  localStorage.setItem('placementPlannerNotes',document.getElementById('notes').value);
-  alert('Note saved.');
-}
-function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
+  };
 
-document.getElementById('notes').value=localStorage.getItem('placementPlannerNotes')||'';
-renderToday();
-renderWeek();
+
+  /* =========================
+     DEFAULT TASKS
+  ========================== */
+
+  const defaultTasks = [
+
+    ["DSA — 60 min", false],
+
+    ["Aptitude — 45 min", false],
+
+    ["AI / CSE literacy — 30 min", false],
+
+    ["College work / revision — 60 min", false],
+
+    ["Gym — ~7:00 PM", false],
+
+    ["Spanish — 5 min", false],
+
+    ["Hindi — 5 min", false]
+
+  ];
+
+
+  /* =========================
+     DATE FUNCTIONS
+  ========================== */
+
+  function isoDate(d) {
+
+    const year = d.getFullYear();
+
+    const month = String(
+      d.getMonth() + 1
+    ).padStart(2, "0");
+
+    const day = String(
+      d.getDate()
+    ).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+
+  }
+
+
+  function localDate(d = new Date()) {
+
+    return new Date(
+      d.getFullYear(),
+      d.getMonth(),
+      d.getDate()
+    );
+
+  }
+
+
+  /* =========================
+     TODAY
+  ========================== */
+
+  function renderToday() {
+
+    const d = localDate();
+
+    const name =
+      d.toLocaleDateString(
+        "en-IN",
+        { weekday: "long" }
+      );
+
+    const date =
+      d.toLocaleDateString(
+        "en-IN",
+        {
+          day: "2-digit",
+          month: "short",
+          year: "numeric"
+        }
+      );
+
+    const info =
+      dayOrders[name] || "No template";
+
+    const isHoliday =
+      info === "Holiday";
+
+    document.getElementById(
+      "todayInfo"
+    ).innerHTML = `
+
+      <div>
+
+        <b>${date}</b>
+
+        <span
+          class="pill ${isHoliday ? "holiday" : ""}"
+        >
+          ${escapeHtml(info)}
+        </span>
+
+      </div>
+
+    `;
+
+  }
+
+
+  /* =========================
+     WEEK DATES
+  ========================== */
+
+  function getWeekDates() {
+
+    const d = localDate();
+
+    const monday = new Date(d);
+
+    const day =
+      d.getDay() || 7;
+
+    monday.setDate(
+      d.getDate() - day + 1
+    );
+
+    return Array.from(
+      { length: 7 },
+      (_, i) => {
+
+        const x =
+          new Date(monday);
+
+        x.setDate(
+          monday.getDate() + i
+        );
+
+        return x;
+
+      }
+    );
+
+  }
+
+
+  /* =========================
+     LOAD TASKS
+  ========================== */
+
+  function loadTasks() {
+
+    const key =
+      "placementPlannerTasks";
+
+    let saved =
+      JSON.parse(
+        localStorage.getItem(key) || "null"
+      );
+
+
+    if (!saved) {
+
+      saved = {};
+
+      getWeekDates().forEach(
+        (d) => {
+
+          saved[isoDate(d)] =
+            defaultTasks.map(
+              x => [x[0], false]
+            );
+
+        }
+      );
+
+      localStorage.setItem(
+        key,
+        JSON.stringify(saved)
+      );
+
+    }
+
+
+    return saved;
+
+  }
+
+
+  /* =========================
+     RENDER WEEK
+  ========================== */
+
+  function renderWeek() {
+
+    const data =
+      loadTasks();
+
+    const wrap =
+      document.getElementById(
+        "weekTasks"
+      );
+
+    wrap.innerHTML = "";
+
+
+    getWeekDates().forEach(
+      d => {
+
+        const key =
+          isoDate(d);
+
+        const day =
+          d.toLocaleDateString(
+            "en-IN",
+            { weekday: "long" }
+          );
+
+        const isToday =
+          key === isoDate(
+            localDate()
+          );
+
+
+        const box =
+          document.createElement(
+            "div"
+          );
+
+        box.className =
+          "day" +
+          (isToday ? " today" : "");
+
+
+        const dayInfo =
+          dayOrders[day] || "";
+
+
+        box.innerHTML = `
+
+          <h4>
+            ${day}
+          </h4>
+
+          <small>
+            ${d.toLocaleDateString(
+              "en-IN",
+              {
+                day: "2-digit",
+                month: "short"
+              }
+            )}
+
+            ·
+
+            ${escapeHtml(dayInfo)}
+          </small>
+
+        `;
+
+
+        const list =
+          document.createElement(
+            "div"
+          );
+
+
+        (data[key] || []).forEach(
+          (t, idx) => {
+
+            const row =
+              document.createElement(
+                "div"
+              );
+
+            row.className =
+              "task" +
+              (t[1] ? " done" : "");
+
+
+            row.innerHTML = `
+
+              <input
+                type="checkbox"
+                ${t[1] ? "checked" : ""}
+                onchange="
+                  toggleTask(
+                    '${key}',
+                    ${idx}
+                  )
+                "
+              >
+
+              <span>
+                ${escapeHtml(t[0])}
+              </span>
+
+            `;
+
+
+            list.appendChild(row);
+
+          }
+        );
+
+
+        box.appendChild(list);
+
+        wrap.appendChild(box);
+
+      }
+    );
+
+  }
+
+
+  /* =========================
+     TOGGLE TASK
+  ========================== */
+
+  function toggleTask(
+    key,
+    idx
+  ) {
+
+    const data =
+      loadTasks();
+
+    if (!data[key]) {
+      return;
+    }
+
+    if (!data[key][idx]) {
+      return;
+    }
+
+
+    data[key][idx][1] =
+      !data[key][idx][1];
+
+
+    localStorage.setItem(
+      "placementPlannerTasks",
+      JSON.stringify(data)
+    );
+
+
+    renderWeek();
+
+  }
+
+
+  /* =========================
+     ADD TASK
+  ========================== */
+
+  function addTask() {
+
+    const text =
+      document
+        .getElementById("taskText")
+        .value
+        .trim();
+
+
+    if (!text) {
+
+      alert(
+        "Enter a task first."
+      );
+
+      return;
+
+    }
+
+
+    const selected =
+      document
+        .getElementById("taskDay")
+        .value;
+
+
+    const dates =
+      getWeekDates();
+
+
+    let target =
+      dates.find(
+        d =>
+          d.toLocaleDateString(
+            "en-IN",
+            { weekday: "long" }
+          ) === selected
+      );
+
+
+    if (
+      selected === "Today"
+    ) {
+
+      target =
+        localDate();
+
+    }
+
+
+    if (
+      selected === "Tomorrow"
+    ) {
+
+      target =
+        localDate();
+
+      target.setDate(
+        target.getDate() + 1
+      );
+
+    }
+
+
+    const data =
+      loadTasks();
+
+    const key =
+      isoDate(target);
+
+
+    data[key] =
+      data[key] || [];
+
+
+    data[key].push([
+      text,
+      false
+    ]);
+
+
+    localStorage.setItem(
+      "placementPlannerTasks",
+      JSON.stringify(data)
+    );
+
+
+    document.getElementById(
+      "taskText"
+    ).value = "";
+
+
+    renderWeek();
+
+  }
+
+
+  /* =========================
+     RESET TASKS
+  ========================== */
+
+  function resetTasks() {
+
+    const confirmed =
+      confirm(
+        "Reset this week to the default task list?"
+      );
+
+
+    if (!confirmed) {
+      return;
+    }
+
+
+    localStorage.removeItem(
+      "placementPlannerTasks"
+    );
+
+
+    renderWeek();
+
+  }
+
+
+  /* =========================
+     NOTES
+  ========================== */
+
+  function saveNotes() {
+
+    const value =
+      document.getElementById(
+        "notes"
+      ).value;
+
+
+    localStorage.setItem(
+      "placementPlannerNotes",
+      value
+    );
+
+
+    alert(
+      "Note saved."
+    );
+
+  }
+
+
+  function clearNotes() {
+
+    document.getElementById(
+      "notes"
+    ).value = "";
+
+  }
+
+
+  /* =========================
+     ESCAPE HTML
+  ========================== */
+
+  function escapeHtml(s) {
+
+    return String(s).replace(
+      /[&<>"']/g,
+      m => ({
+
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+
+      }[m])
+    );
+
+  }
+
+
+  /* =========================
+     INITIALIZE PAGE
+  ========================== */
+
+  document.getElementById(
+    "notes"
+  ).value =
+    localStorage.getItem(
+      "placementPlannerNotes"
+    ) || "";
+
+
+  renderToday();
+
+  renderWeek();
+
 </script>
 
+
+<!-- =========================================================
+     FIREBASE
+========================================================= -->
+
 <script type="module">
-  import { initializeApp }
-    from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+
+  import {
+    initializeApp
+  } from
+  "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+
 
   import {
     getAuth,
     signInWithEmailAndPassword,
     signOut,
     onAuthStateChanged
-  } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+  } from
+  "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
 
   import {
     getFirestore
-  } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+  } from
+  "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyBJoPaDm1Xk4SGJa4AKwxb1AJADjl-1qjU",
-  authDomain: "kavin-placement.firebaseapp.com",
-  projectId: "kavin-placement",
-  storageBucket: "kavin-placement.firebasestorage.app",
-  messagingSenderId: "210089235152",
-  appId: "1:210089235152:web:4b6bbcbc7032fd5e5ac4d5"
-};
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+  /* =========================
+     FIREBASE CONFIG
+  ========================== */
 
-  console.log("Firebase connected!");
+  const firebaseConfig = {
 
-  window.login = async function () {
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
-    const message = document.getElementById("authMessage");
+    apiKey:
+      "AIzaSyBJoPaDm1Xk4SGJa4AKwxb1AJADjl-1qjU",
 
-    if (!email || !password) {
-      message.textContent = "Enter your email and password.";
-      return;
-    }
+    authDomain:
+      "kavin-placement.firebaseapp.com",
 
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      message.textContent = "";
-    } catch (error) {
-      console.error(error);
-      message.textContent = "Login failed. Check your email and password.";
-    }
+    projectId:
+      "kavin-placement",
+
+    storageBucket:
+      "kavin-placement.firebasestorage.app",
+
+    messagingSenderId:
+      "210089235152",
+
+    appId:
+      "1:210089235152:web:4b6bbcbc7032fd5e5ac4d"
+
   };
 
-  window.logout = async function () {
-    await signOut(auth);
-  };
 
-  onAuthStateChanged(auth, (user) => {
-    const loginForm = document.getElementById("loginForm");
-    const loggedIn = document.getElementById("loggedIn");
-    const userEmail = document.getElementById("userEmail");
+  /* =========================
+     INITIALIZE FIREBASE
+  ========================== */
 
-    if (user) {
-      console.log("Logged in:", user.email);
+  const app =
+    initializeApp(
+      firebaseConfig
+    );
 
-      loginForm.style.display = "none";
-      loggedIn.style.display = "block";
-      userEmail.textContent = "👋 " + user.email;
-    } else {
-      console.log("Not logged in");
 
-      loginForm.style.display = "block";
-      loggedIn.style.display = "none";
+  const auth =
+    getAuth(app);
+
+
+  const db =
+    getFirestore(app);
+
+
+  console.log(
+    "Firebase connected!"
+  );
+
+
+  /* =========================
+     LOGIN
+  ========================== */
+
+  window.login =
+    async function () {
+
+      const email =
+        document
+          .getElementById("email")
+          .value
+          .trim();
+
+
+      const password =
+        document
+          .getElementById("password")
+          .value;
+
+
+      const message =
+        document
+          .getElementById("authMessage");
+
+
+      if (!email || !password) {
+
+        message.textContent =
+          "Enter your email and password.";
+
+        return;
+
+      }
+
+
+      message.textContent =
+        "Logging in...";
+
+
+      try {
+
+        await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+
+        message.textContent = "";
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "Login error:",
+          error
+        );
+
+
+        message.textContent =
+          "Login failed. Check your email and password.";
+
+      }
+
+    };
+
+
+  /* =========================
+     LOGOUT
+  ========================== */
+
+  window.logout =
+    async function () {
+
+      try {
+
+        await signOut(auth);
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "Logout error:",
+          error
+        );
+
+      }
+
+    };
+
+
+  /* =========================
+     AUTH STATE
+  ========================== */
+
+  onAuthStateChanged(
+    auth,
+    (user) => {
+
+      const loginForm =
+        document.getElementById(
+          "loginForm"
+        );
+
+
+      const loggedIn =
+        document.getElementById(
+          "loggedIn"
+        );
+
+
+      const userEmail =
+        document.getElementById(
+          "userEmail"
+        );
+
+
+      if (user) {
+
+        console.log(
+          "Logged in:",
+          user.email
+        );
+
+
+        loginForm.style.display =
+          "none";
+
+
+        loggedIn.style.display =
+          "flex";
+
+
+        userEmail.textContent =
+          "👋 " + user.email;
+
+      }
+
+      else {
+
+        console.log(
+          "Not logged in"
+        );
+
+
+        loginForm.style.display =
+          "block";
+
+
+        loggedIn.style.display =
+          "none";
+
+      }
+
     }
-  });
-/* ===== FIX PAGE COLORS ===== */
+  );
 
-body {
-  background: #f5f7fb !important;
-  color: #172033 !important;
-}
-
-main {
-  color: #172033 !important;
-}
-
-.card {
-  background: #ffffff !important;
-  color: #172033 !important;
-}
-
-.card h2,
-.card h3,
-.card h4,
-.card strong {
-  color: #172033 !important;
-}
-
-.card p,
-.card div,
-.card span,
-.card small {
-  color: inherit;
-}
-
-.muted {
-  color: #687386 !important;
-}
-
-.day {
-  background: #ffffff !important;
-  color: #172033 !important;
-}
-
-.day small {
-  color: #687386 !important;
-}
-
-.task {
-  color: #172033 !important;
-}
-
-.task span {
-  color: #172033 !important;
-}
-
-.task.done span {
-  color: #687386 !important;
-}
-
-.timeline .slot {
-  background: #f8fafc !important;
-  color: #172033 !important;
-}
-
-.timeline .slot strong {
-  color: #172033 !important;
-}
-
-/* Keep header white */
-header {
-  background: #123f78 !important;
-  color: #ffffff !important;
-}
-
-header h1,
-header p {
-  color: #ffffff !important;
-}
-
-/* Login inputs */
-header input {
-  background: #ffffff !important;
-  color: #172033 !important;
-}
-
-header input::placeholder {
-  color: #687386 !important;
-}
-
-.footer {
-  color: #687386 !important;
-}
 </script>
+
 
 </body>
 </html>
-
