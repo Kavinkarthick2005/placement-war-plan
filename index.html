@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kavin — Placement & Semester Planner</title>
+<style>
+  :root {
+    --bg:#f5f7fb; --card:#fff; --text:#172033; --muted:#687386;
+    --blue:#2563eb; --blue2:#dbeafe; --green:#16a34a; --red:#dc2626;
+    --border:#e5e7eb; --yellow:#f59e0b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
+  header{background:#123f78;color:white;padding:24px 5%;position:sticky;top:0;z-index:5}
+  header h1{margin:0 0 6px;font-size:24px}
+  header p{margin:0;color:#dbeafe}
+  main{max-width:1200px;margin:24px auto;padding:0 18px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;box-shadow:0 3px 12px #00000008}
+  h2{font-size:18px;margin:0 0 14px}
+  h3{font-size:15px;margin:0 0 8px}
+  .muted{color:var(--muted);font-size:13px}
+  .pill{display:inline-block;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:700;background:var(--blue2);color:#1d4ed8;margin:2px}
+  .holiday{background:#fee2e2;color:#b91c1c}
+  .today{background:#dcfce7;color:#166534}
+  .danger{color:var(--red)}
+  .success{color:var(--green)}
+  .timeline{display:grid;gap:8px}
+  .slot{padding:10px 12px;border-left:4px solid var(--blue);background:#f8fafc;border-radius:8px}
+  .slot strong{display:block}
+  input,select,textarea,button{font:inherit}
+  input,select,textarea{width:100%;padding:9px 10px;border:1px solid #d1d5db;border-radius:8px;background:white}
+  textarea{min-height:90px;resize:vertical}
+  button{border:0;border-radius:8px;padding:9px 13px;cursor:pointer;font-weight:700}
+  .primary{background:var(--blue);color:white}.secondary{background:#eef2f7;color:#273449}
+  .dangerbtn{background:#fee2e2;color:#991b1b}
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .row > *{flex:1}
+  .task{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
+  .task:last-child{border-bottom:0}
+  .task input[type=checkbox]{width:auto}
+  .task.done span{text-decoration:line-through;color:var(--muted)}
+  .week{margin-top:18px}
+  .weekhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+  .dategrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+  .day{border:1px solid var(--border);border-radius:10px;padding:12px;background:#fff}
+  .day.today{border:2px solid #86efac}
+  .day h4{margin:0 0 6px}
+  .day small{color:var(--muted)}
+  .day ul{padding-left:18px;margin:8px 0 0;font-size:13px}
+  .stat{font-size:26px;font-weight:800}
+  .small{font-size:12px}
+  .footer{text-align:center;color:var(--muted);padding:25px}
+  @media(max-width:600px){header{padding:18px}.card{padding:14px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎯 Placement + Semester Planner</h1>
+  <p>Simple weekly control panel — update it every day. Goal: stay consistent through 20 Nov 2026.</p>
+</header>
+
+<main>
+  <div class="grid">
+    <section class="card">
+      <h2>📌 Today</h2>
+      <div id="todayInfo"></div>
+      <div style="margin-top:12px">
+        <div class="muted">Current focus</div>
+        <div id="focus" class="stat">Placement</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>⏱️ Daily basics</h2>
+      <div class="timeline">
+        <div class="slot"><strong>Weekdays — 7:00 AM</strong>Wake up</div>
+        <div class="slot"><strong>Weekends — 9:00 AM</strong>Wake up</div>
+        <div class="slot"><strong>Target — 12:00 AM</strong>Sleep (fix from 1:00 AM)</div>
+        <div class="slot"><strong>~15 min</strong>Home ↔ College commute</div>
+        <div class="slot"><strong>~7:00–8:30 PM</strong>Gym</div>
+        <div class="slot"><strong>5 min + 5 min</strong>Spanish + Hindi Duolingo</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>🏫 Day Order templates</h2>
+      <div class="timeline">
+        <div class="slot"><strong>Day 1 — 4:00–4:50 PM</strong>Disaster Mitigation & Management</div>
+        <div class="slot"><strong>Day 2 — 8:00–11:30 AM</strong>8:00–9:40 Statistics → 9:45–11:30 Disaster</div>
+        <div class="slot"><strong>Day 3 — 3:10–4:00 PM</strong>Design of AI Products</div>
+        <div class="slot"><strong>Day 4 — 8:00–11:30 AM</strong>8:00–9:40 AI Products → 9:45–11:30 Statistics</div>
+        <div class="slot"><strong>Day 5 — 9:45–11:30 AM</strong>Placement Training (tentative)</div>
+      </div>
+    </section>
+  </div>
+
+  <section class="card week">
+    <div class="weekhead">
+      <div>
+        <h2>🗓️ This week's plan</h2>
+        <div class="muted">Edit the tasks below. Changes are saved in this browser.</div>
+      </div>
+      <button class="secondary" onclick="resetTasks()">Reset tasks</button>
+    </div>
+    <div id="weekTasks"></div>
+  </section>
+
+  <section class="card week">
+    <h2>🚀 Placement roadmap</h2>
+    <div class="grid">
+      <div>
+        <h3>DSA</h3>
+        <div class="muted">Arrays · Strings · Linked List · Binary Search · Recursion · Trees · Graphs · DP</div>
+      </div>
+      <div>
+        <h3>CSE / AI core</h3>
+        <div class="muted">OOP · DBMS · OS · CN · SQL · Language basics · AI basics · System Design</div>
+      </div>
+      <div>
+        <h3>Resume / profile</h3>
+        <div class="muted">Projects · Skills · Internships · Achievements · Certifications · POR · Extra activities</div>
+      </div>
+      <div>
+        <h3>Miscellaneous</h3>
+        <div class="muted">Aptitude · Communication · Puzzles/SG · HR questions · Introduction</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card week">
+    <h2>➕ Add / update a task</h2>
+    <div class="row">
+      <input id="taskText" placeholder="Example: Finish FT3 Unit 4 revision">
+      <select id="taskDay">
+        <option>Today</option><option>Tomorrow</option><option>Monday</option><option>Tuesday</option>
+        <option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+      </select>
+      <button class="primary" onclick="addTask()">Add task</button>
+    </div>
+    <p class="muted">Use this for assignments, tests, placement tests, presentations, applications, etc.</p>
+  </section>
+
+  <section class="card week">
+    <h2>📝 Important deadlines</h2>
+    <div class="timeline">
+      <div class="slot"><strong>9 Oct 2026</strong>Project presentation — stated as the last date for remaining teams.</div>
+      <div class="slot"><strong>14 Oct 2026</strong>FT3 test — Unit 4 + Unit 5.</div>
+      <div class="slot"><strong>October 2026</strong>Disaster FT3 exam after the 30th + presentation/case study work.</div>
+      <div class="slot"><strong>20 Nov 2026</strong>🔥 Last working day for this semester.</div>
+    </div>
+  </section>
+
+  <section class="card week">
+    <h2>✏️ Quick daily note</h2>
+    <textarea id="notes" placeholder="What happened today? What needs to move to tomorrow?"></textarea>
+    <div class="row" style="margin-top:8px">
+      <button class="primary" onclick="saveNotes()">Save note</button>
+      <button class="secondary" onclick="document.getElementById('notes').value=''">Clear box</button>
+    </div>
+  </section>
+
+  <div class="footer">Keep it simple: <b>DSA + aptitude + college + health + sleep.</b> Consistency beats a 12-hour timetable you can't repeat.</div>
+</main>
+
+<script>
+const dayOrders = {
+  "Thursday": "Day 3 — 3:10–4:00 PM · Design of AI Products",
+  "Friday": "Day 4 — 8:00–11:30 AM · AI Products + Statistics",
+  "Monday": "Day 5 — 9:45–11:30 AM · Placement Training",
+  "Tuesday": "Day 1 — 4:00–4:50 PM · Disaster",
+  "Wednesday": "Day 2 — 8:00–11:30 AM · Statistics + Disaster",
+  "Saturday": "Holiday",
+  "Sunday": "Holiday"
+};
+
+const defaultTasks = [
+  ["DSA — 60 min", false], ["Aptitude — 45 min", false],
+  ["AI / CSE literacy — 30 min", false], ["College work / revision — 60 min", false],
+  ["Gym — ~7:00 PM", false], ["Spanish — 5 min", false], ["Hindi — 5 min", false]
+];
+
+function isoDate(d){ return d.toISOString().slice(0,10); }
+function localDate(d=new Date()){ return new Date(d.getFullYear(),d.getMonth(),d.getDate()); }
+
+function renderToday(){
+  const d=localDate();
+  const name=d.toLocaleDateString('en-IN',{weekday:'long'});
+  const date=d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+  const info=dayOrders[name] || "No template";
+  document.getElementById('todayInfo').innerHTML =
+    `<div><b>${date}</b> <span class="pill ${info==='Holiday'?'holiday':''}">${info}</span></div>`;
+}
+
+function getWeekDates(){
+  const d=localDate();
+  const monday=new Date(d);
+  const day=d.getDay() || 7;
+  monday.setDate(d.getDate()-day+1);
+  return Array.from({length:7},(_,i)=>{const x=new Date(monday);x.setDate(monday.getDate()+i);return x;});
+}
+
+function loadTasks(){
+  const key='placementPlannerTasks';
+  let saved=JSON.parse(localStorage.getItem(key)||'null');
+  if(!saved){ saved={}; getWeekDates().forEach((d,i)=>saved[isoDate(d)]=defaultTasks.map(x=>[x[0],false])); localStorage.setItem(key,JSON.stringify(saved)); }
+  return saved;
+}
+
+function renderWeek(){
+  const data=loadTasks();
+  const wrap=document.getElementById('weekTasks');
+  wrap.innerHTML='';
+  getWeekDates().forEach(d=>{
+    const key=isoDate(d), day=d.toLocaleDateString('en-IN',{weekday:'long'});
+    const box=document.createElement('div'); box.className='day '+(key===isoDate(localDate())?'today':'');
+    box.innerHTML=`<h4>${day}</h4><small>${d.toLocaleDateString('en-IN',{day:'2-digit',month:'short'})} · ${dayOrders[day]||''}</small>`;
+    const list=document.createElement('div');
+    (data[key]||[]).forEach((t,idx)=>{
+      const row=document.createElement('div'); row.className='task '+(t[1]?'done':'');
+      row.innerHTML=`<input type="checkbox" ${t[1]?'checked':''} onchange="toggleTask('${key}',${idx})"><span>${escapeHtml(t[0])}</span>`;
+      list.appendChild(row);
+    });
+    box.appendChild(list); wrap.appendChild(box);
+  });
+}
+
+function toggleTask(key,idx){
+  const data=loadTasks(); data[key][idx][1]=!data[key][idx][1];
+  localStorage.setItem('placementPlannerTasks',JSON.stringify(data)); renderWeek();
+}
+
+function addTask(){
+  const text=document.getElementById('taskText').value.trim(); if(!text)return;
+  const selected=document.getElementById('taskDay').value;
+  const dates=getWeekDates();
+  let target=dates.find(d=>d.toLocaleDateString('en-IN',{weekday:'long'})===selected);
+  if(selected==='Today') target=localDate();
+  if(selected==='Tomorrow'){target=localDate();target.setDate(target.getDate()+1);}
+  const data=loadTasks(), key=isoDate(target);
+  data[key]=data[key]||[]; data[key].push([text,false]);
+  localStorage.setItem('placementPlannerTasks',JSON.stringify(data));
+  document.getElementById('taskText').value=''; renderWeek();
+}
+
+function resetTasks(){
+  if(!confirm('Reset this week to the default task list?'))return;
+  localStorage.removeItem('placementPlannerTasks'); renderWeek();
+}
+
+function saveNotes(){
+  localStorage.setItem('placementPlannerNotes',document.getElementById('notes').value);
+  alert('Note saved.');
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
+
+document.getElementById('notes').value=localStorage.getItem('placementPlannerNotes')||'';
+renderToday(); renderWeek();
+</script>
+</body>
+</html>
